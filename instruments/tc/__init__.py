@@ -24,19 +24,22 @@ except:
     from PyQt4.QtCore import *
 import math
 import pyavtools.fix as fix
+import pyavtools.filters as filters
 
 
 class TurnCoordinator(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, filter_depth=10):
         super(TurnCoordinator, self).__init__(parent)
         self.setStyleSheet("border: 0px")
         self.setFocusPolicy(Qt.NoFocus)
         self._rate = 0.0
         self._latAcc = 0.0
+        self._lastAcc = 0.00
         item = fix.db.get_item("ALAT")
         item.valueChanged[float].connect(self.setLatAcc)
         item1 = fix.db.get_item("ROT", True)
         item1.valueChanged[float].connect(self.setROT)
+        self.filter = filters.AvgFilter(filter_depth)
 
     def resizeEvent(self, event):
         self.tick_thickness = self.height() / 32
@@ -113,8 +116,7 @@ class TurnCoordinator(QWidget):
         pen.setWidth(2)
         p.setPen(pen)
         p.setBrush(brush)
-        centerball = self.center.x() + (self.boxHalfWidth - length / 2) * (-(
-                     self._latAcc / 32.185039370079) / 0.217)
+        centerball = self.center.x() - (length * self._latAcc / 0.06)
 
         # /accelerations/pilot/y-accel-fps_sec
         # 32.185039370079 fps /sec = 1 G
@@ -167,8 +169,9 @@ class TurnCoordinator(QWidget):
         return self._latAcc
 
     def setLatAcc(self, acc):
-        if acc != self._latAcc:
-            self._latAcc = acc
+        self._lastAcc = self._latAcc
+        self._latAcc = self.filter.setValue(acc)
+        if self._lastAcc != self._latAcc:
             self.update()
 
     latAcc = property(getLatAcc, setLatAcc)
