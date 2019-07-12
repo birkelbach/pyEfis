@@ -179,11 +179,12 @@ class Altimeter_Tape(QGraphicsView):
 
 
     def resizeEvent(self, event):
-        if self.update_period is None:
-            self.update_period = self.myparent.get_config_item('update_period')
-            if self.update_period is None:
-                self.update_period = .1
-            self.last_update_time = 0
+        # if self.update_period is None:
+        #     self.update_period = self.myparent.get_config_item('update_period')
+        #     if self.update_period is None:
+        #         self.update_period = .1
+        self.update_period = .1
+        self.last_update_time = 0
         self.item.valueChanged[float].connect(self.setAltimeter)
         self.item.oldChanged[bool].connect(self.setAltOld)
         self.item.badChanged[bool].connect(self.setAltBad)

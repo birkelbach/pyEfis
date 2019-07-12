@@ -219,12 +219,15 @@ class AI(QGraphicsView):
             t.setX(left - (t.boundingRect().width() + 5))
             t.setY(y - t.boundingRect().height() / 2)
             t.setZValue(1)
-        self.update_period = self.myparent.get_config_item('update_period')
-        if self.update_period is None:
-            self.update_period = .1
+        # self.update_period = self.myparent.get_config_item('update_period')
+        # if self.update_period is None:
+        #     self.update_period = .1
+        self.update_period = .1
         self.last_update_time = 0
-        self.show_standard_turn = self.myparent.get_config_item('show_standard_turn')
-        if self.show_standard_turn is None: self.show_standard_turn = True
+        # self.show_standard_turn = self.myparent.get_config_item('show_standard_turn')
+        # if self.show_standard_turn is None: self.show_standard_turn = True
+        self.show_standard_turn = False
+
         self.redraw()
 
     def redraw(self):
@@ -275,22 +278,22 @@ class AI(QGraphicsView):
             p.rotate(- 2 * angle)
             p.drawLine(longLine)
             p.rotate(angle)
-        if self.show_standard_turn and (not(self.fix_tas.fail)) and self.fix_tas.value > 30:
-            srpen = QPen(self.srTurnColor)
-            srpen.setWidth(3)
-            p.setPen(srpen)
-            #math.tan(_bank_angle_) = (rate_of_turn * tas_knots * 493/900) / 9.8(m/s)
-            # standard rate of turn = 3 degrees per second
-            rate_of_turn = math.radians(3)
-            tas_knots = self.fix_tas.value
-            #_bank_angle_ = math.atan((rate_of_turn * tas_knots * 493/900) / 9.8(m/s))
-            srbank = math.atan((rate_of_turn * tas_knots * 493/900) / 9.8)
-            srbank = math.degrees(srbank)
-            p.rotate(srbank)
-            p.drawLine(longLine)
-            p.rotate(- 2 * srbank)
-            p.drawLine(longLine)
-            p.rotate(srbank)
+        # if self.show_standard_turn and (not(self.fix_tas.fail)) and self.fix_tas.value > 30:
+        #     srpen = QPen(self.srTurnColor)
+        #     srpen.setWidth(3)
+        #     p.setPen(srpen)
+        #     #math.tan(_bank_angle_) = (rate_of_turn * tas_knots * 493/900) / 9.8(m/s)
+        #     # standard rate of turn = 3 degrees per second
+        #     rate_of_turn = math.radians(3)
+        #     tas_knots = self.fix_tas.value
+        #     #_bank_angle_ = math.atan((rate_of_turn * tas_knots * 493/900) / 9.8(m/s))
+        #     srbank = math.atan((rate_of_turn * tas_knots * 493/900) / 9.8)
+        #     srbank = math.degrees(srbank)
+        #     p.rotate(srbank)
+        #     p.drawLine(longLine)
+        #     p.rotate(- 2 * srbank)
+        #     p.drawLine(longLine)
+        #     p.rotate(srbank)
 
         pen = QPen(self.overlayColor)
         pen.setWidth(1)

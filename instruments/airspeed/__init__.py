@@ -236,11 +236,15 @@ class Airspeed_Tape(QGraphicsView):
         self.fontsize = 20
 
     def resizeEvent(self, event):
-        if self.update_period is None:
-            self.update_period = self.myparent.get_config_item('update_period')
-            if self.update_period is None:
-                self.update_period = .1
-            self.last_update_time = 0
+        # if self.update_period is None:
+        #     self.update_period = self.myparent.get_config_item('update_period')
+        #     if self.update_period is None:
+        #         self.update_period = .1
+        #     self.last_update_time = 0
+
+        self.update_period = .1
+        self.last_update_time = 0
+        
         w = self.width()
         h = self.height()
         self.markWidth = w / 5
